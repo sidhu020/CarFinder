@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Finder</title>
+    <!-- Link to Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for 3D effect and animations */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+           
+        }
+
+        .container {
+            max-width: 350px;
+            margin-top: 20%;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-50px);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .instructions img {
+            max-width: 70%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-custom {
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* .animated-text {
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        } */
+
+ 
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animated-text {
+            animation: fadeIn 1s ease-in;
+        }
+
+        .card-custom {
+            border-radius: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center animated-text">Find a Car</h1>
+    <p class="text-center animated-text">Enter the car's license plate to get the owner's contact information.</p>
+    
+    <div class="form-group ">
+        <input type="text" class="form-control" id="licensePlate" placeholder="Enter License Plate (Ex. GJ11AB1234)" aria-describedby="licenseHelp">
+    </div>
+
+    <button class="btn-custom btn btn-block" onclick="findCar()">Find Car</button>
+
+    <!-- Instructions Section -->
+    <div class="instructions animated-text">
+        <h4 class="">How to Read the License Plate:</h4>
+        <img src="/numberplat.png" alt="Sample License Plate Image">
+        <p class="">The license plate number is usually located on the front and rear of the vehicle.</P>
+        
+        <p class="">Ensure you write the exact characters. <B>Ex:- GJ03MF4477</B></p>
+    </div>
+</div>
+
+<!-- Car Owner Details Modal -->
+<div class="modal" id="carDetailsModal" tabindex="-1" role="dialog" aria-labelledby="carDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="carDetailsModalLabel"><B>Car Owner Details</B></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="ownerName"><strong>Owner: </strong>John Doe</p>
+                <p id="carModel"><strong>Car Model: </strong>Toyota Corolla</p>
+                <p id="contactNumber"><strong>Contact: </strong>555-1234</p>
+                <p id="parkedLocation"><strong>Parked Location: </strong>123 Main St.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // JavaScript function to handle the car lookup
+    function findCar() {
+        const licensePlate = document.getElementById('licensePlate').value.toUpperCase();
+        
+        // For the sake of this example, we use a mock database
+        const carDatabase = {
+            'GJ03CA2336': {
+                owner: 'SIDDHARTH',
+                model: 'Maruti Suzuki WagonR',
+                contact: '+91-8460589338',
+                location: 'Rajkot'
+            },
+            'XYZ789': {
+                owner: 'Jane Smith',
+                model: 'Honda Civic',
+                contact: '555-5678',
+                location: 'Near the library.'
+            }
+        };
+
+        if (carDatabase[licensePlate]) {
+            const car = carDatabase[licensePlate];
+            // Update the car details in the modal
+            document.getElementById('ownerName').textContent = `Owner: ${car.owner}`;
+            document.getElementById('carModel').textContent = `Car Model: ${car.model}`;
+           // document.getElementById('contactNumber').textContent = `Contact: ${car.contact}`;
+           document.getElementById('contactNumber').innerHTML = `Contact: <a href="tel:${car.contact}">Call Now</a>`;
+           document.getElementById('parkedLocation').textContent = `Parked Location: ${car.location}`;
+
+            // Show the modal with the car details
+            $('#carDetailsModal').modal('show');
+        } else {
+            alert('Car not found. Please check the number plate and try again.');
+        }
+    }
+</script>
+
+</body>
+</html>
